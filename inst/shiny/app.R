@@ -233,7 +233,11 @@ server <- function(input, output, session) {
   # Output for Table tab: a table summarizing all the input values.
   output$valuesTable <- renderTable({
     pred <- predictions()
-    tab <- pred$mean_tfr_paths |> mutate(h = as.integer(h)) |> arrange(h)
+    tab <-
+      data.frame(
+        h = 1:cnst$forecast_horizon,
+        tfr = pred$mean_tfr_paths$tfr
+      )
     colnames(tab) <- c('Years into forecast', 'TFR')
     tab
   })
