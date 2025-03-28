@@ -1,0 +1,19 @@
+Package: pfs
+Title: Probabilistic Fertility Scenarios
+Version: 0.0.0.9000
+Authors@R: c( 
+    person("Jonas", "Schöley", , "schoeley@demogr.mpg.de", role = c("cre", "aut")),
+    person("Ricarda", "Duerst", , "duerst@demogr.mpg.de", role = c("ctb")),
+    person("Julia", "Hellstrand", , "julia.hellstrand@helsinki.fi", role = c("ctb")),
+    person("Mikko", "Myrskylä", , "office-myrskyla@demogr.mpg.de", role = c("ctb"))
+  )
+Description: PFS allows for probabilistic forecasts of age specific
+    fertility rates around a pre-specified scenario where a given target
+    TFR and mean age at birth are reached at a given time.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends: R (>= 4.3.0)
+Imports: ggplot2 (>= 3.4.0), shiny
+LazyData: true
