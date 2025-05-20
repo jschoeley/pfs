@@ -1,6 +1,6 @@
 Package: pfs
 Title: Probabilistic Fertility Scenarios
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: c( 
     person("Jonas", "Schöley", , "schoeley@demogr.mpg.de", role = c("cre", "aut")),
     person("Ricarda", "Duerst", , "duerst@demogr.mpg.de", role = c("ctb")),
@@ -15,5 +15,5 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Depends: R (>= 4.3.0)
-Imports: ggplot2 (>= 3.4.0), shiny
+Imports: ggplot2 (>= 3.4.0), shiny, MASS
 LazyData: true

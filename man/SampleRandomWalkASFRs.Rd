@@ -37,4 +37,13 @@ target_asfrs <-
 trajectory <-
   PredictTrajectoryToTargetASFRs(forecast_definition, target_asfrs)
 SampleRandomWalkASFRs(forecast_definition, trajectory, nsim = 100)
+
+# example with user-provided co-variance matrix
+forecast_definition$randomness <- 'manual'
+forecast_definition$covariance <- diag(7)*0.05
+target_asfrs <-
+  PredictTargetASFRs(forecast_definition)$optimized_target_asfrs
+trajectory <-
+  PredictTrajectoryToTargetASFRs(forecast_definition, target_asfrs)
+SampleRandomWalkASFRs(forecast_definition, trajectory, nsim = 100)
 }

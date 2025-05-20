@@ -9,6 +9,8 @@
 #' A 3d array of sampled ASFR paths.
 #' @export
 #'
+#' @importFrom MASS mvrnorm
+#'
 #' @examples
 #' forecast_definition <- DefineForecast(
 #'     jumpoff_asfrs = c(0.0031, 0.0269, 0.0671, 0.0888, 0.0512, 0.0134, 0.0012),
@@ -21,6 +23,15 @@
 #'     timestep_of_steepest_growth = 15,
 #'     randomness = 'finland1995-2024'
 #'  )
+#' target_asfrs <-
+#'   PredictTargetASFRs(forecast_definition)$optimized_target_asfrs
+#' trajectory <-
+#'   PredictTrajectoryToTargetASFRs(forecast_definition, target_asfrs)
+#' SampleRandomWalkASFRs(forecast_definition, trajectory, nsim = 100)
+#'
+#' # example with user-provided co-variance matrix
+#' forecast_definition$randomness <- 'manual'
+#' forecast_definition$covariance <- diag(7)*0.05
 #' target_asfrs <-
 #'   PredictTargetASFRs(forecast_definition)$optimized_target_asfrs
 #' trajectory <-
@@ -45,7 +56,7 @@ SampleRandomWalkASFRs <- function (
   )
 
   for (k in 1:nsim) {
-    innovations <- MASS::mvrnorm(H, rep(0, n_ages), cov_mat)
+    innovations <- mvrnorm(H, rep(0, n_ages), cov_mat)
     cumulative_innovations <- apply(innovations, MARGIN = 2, cumsum)
     # TODO: check if innovations have been modeled over log differences as well
     log_asfr_paths <-

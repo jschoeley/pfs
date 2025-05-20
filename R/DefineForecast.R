@@ -12,7 +12,9 @@
 #' @param timestep_of_steepest_growth Timesteps into forecast until
 #' half of ASFR change has been realized
 #' @param randomness Specification of randomness around future ASFRs.
-#' One of 'finland1995-2024', 'empirical', 'manual'. See details.
+#' One of 'finland1995-2024', 'empirical', or 'manual'.
+#' @param covariance a user provided numeric matrix with covariance
+#' of log-asfr across age groups.
 #'
 #' @returns
 #' A PFS object.
@@ -39,7 +41,8 @@ DefineForecast <- function (
     target_mab,
     asfr_growth_rate,
     timestep_of_steepest_growth,
-    randomness = c('finland1995-2024', 'empirical', 'manual')
+    randomness = c('finland1995-2024', 'empirical', 'manual'),
+    covariance = NULL
 ) {
   # TODO: Add forecast horizon, and year of target TFR
 
@@ -83,6 +86,16 @@ DefineForecast <- function (
   stopifnot("`asfr_growth_rate` must be positive." = asfr_growth_rate>=0)
   # randomness
   match.arg(arg = randomness, choices = c('finland1995-2024', 'empirical', 'manual'))
+  # covariance
+  if (identical(randomness, 'manual')) {
+    stopifnot("`covariance` must be a matrix." = is.matrix(covariance))
+    stopifnot("`covariance` must be a numeric matrix." = is.numeric(covariance))
+    stopifnot("`covariance` must not contain NAs or NaNs." = !anyNA(covariance))
+    stopifnot("`covariance` must be finite." = !any(is.infinite(covariance)))
+    stopifnot("`covariance` must be square." = NROW(covariance) == NCOL(covariance))
+    stopifnot("`covariance` must have length ages^2" = length(covariance)==(length(ages)^2))
+  }
+
   # TODO: add further input type checks
 
   # derive objects
@@ -95,7 +108,7 @@ DefineForecast <- function (
     randomness,
     'finland1995-2024' = preestimated_covariance$finland1995to2024,
     'empirical' = stop("Not yet implemented."),
-    'manual' = stop("Not yet implemented.")
+    'manual' = covariance
   )
 
   # create analysis object

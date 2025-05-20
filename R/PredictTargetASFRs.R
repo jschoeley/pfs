@@ -11,6 +11,8 @@
 #'
 #' @export
 #'
+#' @importFrom stats optim
+#'
 #' @examples
 #' forecast_definition <- DefineForecast(
 #'     jumpoff_asfrs = c(0.0031, 0.0269, 0.0671, 0.0888, 0.0512, 0.0134, 0.0012),
@@ -40,7 +42,7 @@ PredictTargetASFRs <- function (
   target_mab <- forecast_definition$target_mab
 
   # the loss function of the optimization problem
-  Loss <- function (delta, input, n, w) {
+  Loss <- function (delta, n, w) {
     prop_delta <- exp(delta)
     optim_asfrs <- y0*prop_delta
     mab <- t(m)%*%prop.table(optim_asfrs)
@@ -53,7 +55,7 @@ PredictTargetASFRs <- function (
   }
 
   # optimize
-  fit <- optim(rep(1, n), Loss, gr = NULL, input, n, w,
+  fit <- optim(rep(1, n), Loss, gr = NULL, n, w,
                control = list(maxit = 1e4))
 
   # results

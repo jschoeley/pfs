@@ -8,6 +8,8 @@
 #' A list with 7 entries
 #' @export
 #'
+#' @importFrom stats quantile
+#'
 #' @examples
 #' forecast_definition <- DefineForecast(
 #'     jumpoff_asfrs = c(0.0031, 0.0269, 0.0671, 0.0888, 0.0512, 0.0134, 0.0012),

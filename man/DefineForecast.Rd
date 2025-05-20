@@ -13,7 +13,8 @@ DefineForecast(
   target_mab,
   asfr_growth_rate,
   timestep_of_steepest_growth,
-  randomness = c("finland1995-2024", "empirical", "manual")
+  randomness = c("finland1995-2024", "empirical", "manual"),
+  covariance = NULL
 )
 }
 \arguments{
@@ -37,7 +38,10 @@ forecasting horizon}
 half of ASFR change has been realized}
 
 \item{randomness}{Specification of randomness around future ASFRs.
-One of 'finland1995-2024', 'empirical', 'manual'. See details.}
+One of 'finland1995-2024', 'empirical', or 'manual'.}
+
+\item{covariance}{a user provided numeric matrix with covariance
+of log-asfr across age groups.}
 }
 \value{
 A PFS object.
