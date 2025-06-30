@@ -15,6 +15,8 @@
 #' One of 'finland1995-2024', 'empirical', or 'manual'.
 #' @param covariance a user provided numeric matrix with covariance
 #' of log-asfr across age groups.
+#' @param fixed_rates should a fixed rates forecast be performed
+#' with central asfr rates fixed at their jumpoff levels? (default=FALSE)
 #'
 #' @returns
 #' A PFS object.
@@ -42,7 +44,8 @@ DefineForecast <- function (
     asfr_growth_rate,
     timestep_of_steepest_growth,
     randomness = c('finland1995-2024', 'empirical', 'manual'),
-    covariance = NULL
+    covariance = NULL,
+    fixed_rates = FALSE
 ) {
   # TODO: Add forecast horizon, and year of target TFR
 
@@ -103,6 +106,7 @@ DefineForecast <- function (
     names(ages) <- ages
   }
   widths = c(diff(ages), wlast)
+  names(widths) <- names(ages)
   midpoints <- ages + widths/2
   cov_matrix <- switch (
     randomness,
@@ -110,6 +114,13 @@ DefineForecast <- function (
     'empirical' = stop("Not yet implemented."),
     'manual' = covariance
   )
+
+  if (isTRUE(fixed_rates)) {
+    target_tfr <- sum(widths*jumpoff_asfrs)
+    target_mab <- sum(midpoints*prop.table(jumpoff_asfrs))
+    asfr_growth_rate <- 0
+    timestep_of_steepest_growth <- 1
+  }
 
   # create analysis object
   structure(
@@ -127,7 +138,8 @@ DefineForecast <- function (
       target_mab = target_mab,
       asfr_growth_rate = asfr_growth_rate,
       timestep_of_steepest_growth = timestep_of_steepest_growth,
-      covariance_matrix = cov_matrix
+      covariance_matrix = cov_matrix,
+      fixed_rates = fixed_rates
     ),
     class = "pfs"
   )

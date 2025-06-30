@@ -2,6 +2,7 @@
 #'
 #' @param forecast_definition a pfs object
 #' @param target_asfrs a numerical vectors of desired ASFRs at target
+#' @param fixed_rates should the rates be fixed at jumpoff (default=FALSE)
 #'
 #' @returns
 #' a matrix of central ASFR predictions over the forecasting horizon.
@@ -26,22 +27,28 @@
 #' PredictTrajectoryToTargetASFRs(forecast_definition, target_asfrs)
 PredictTrajectoryToTargetASFRs <- function (
     forecast_definition,
-    target_asfrs
+    target_asfrs,
+    fixed_rates = FALSE
 ) {
-  # TODO: restrict domain to forecasting horizon
   y0 <- forecast_definition$jumpoff_asfrs
   ages_names <- forecast_definition$ages_names
   n_ages <- forecast_definition$n_ages
   H <- forecast_definition$forecast_horizon
   h <- forecast_definition$h
-  halfway <- forecast_definition$timestep_of_steepest_growth
-  B <- forecast_definition$asfr_growth_rate
 
-  asfrs_delta <- (y0 - target_asfrs)
-  time <- matrix(h, H, n_ages) - halfway
-  asfrs_growth <- 1/(1 + exp(B*time))
-  asfrs_change_trajectory <- sweep(asfrs_growth, 2, asfrs_delta, "*")
-  asfrs_trajectory <- sweep(asfrs_change_trajectory, 2, target_asfrs, "+")
+  if (isTRUE(fixed_rates)) {
+    asfrs_trajectory <- matrix(y0, H, n_ages, byrow = TRUE)
+  } else {
+    # TODO: restrict domain to forecasting horizon
+    halfway <- forecast_definition$timestep_of_steepest_growth
+    B <- forecast_definition$asfr_growth_rate
+
+    asfrs_delta <- (y0 - target_asfrs)
+    time <- matrix(h, H, n_ages) - halfway
+    asfrs_growth <- 1/(1 + exp(B*time))
+    asfrs_change_trajectory <- sweep(asfrs_growth, 2, asfrs_delta, "*")
+    asfrs_trajectory <- sweep(asfrs_change_trajectory, 2, target_asfrs, "+")
+  }
   dimnames(asfrs_trajectory) <- list(h = h, age = ages_names)
   asfrs_trajectory
 }

@@ -136,6 +136,12 @@ cnst <- list(
   nsim = 150
 )
 
+jumpoff_asfr_df <- data.frame(
+  h = 0,
+  age = names(cnst$ages),
+  jumpoff_asfr = cnst$jumpoff_asfrs
+)
+
 # UI --------------------------------------------------------------
 
 ui <- fluidPage(
@@ -150,6 +156,9 @@ ui <- fluidPage(
                   min = 0.0, max = 2.0, value = 0.3, step = 0.01),
       sliderInput("timestep_of_steepest_growth", "Timing of steepest growth:",
                   min = 2, max = 50, value = 5, step = 1),
+      checkboxInput(inputId = "fixed_rates",
+                    label = "Fixed ASFR forecast",
+                    value = FALSE),
       actionButton("reset", "Reset to MPIDR forecast")
     ),
     mainPanel(
@@ -191,7 +200,8 @@ server <- function(input, output, session) {
       target_mab = input$target_mab,
       asfr_growth_rate = input$asfr_growth_rate,
       timestep_of_steepest_growth = input$timestep_of_steepest_growth,
-      randomness = 'finland1995-2024'
+      randomness = 'finland1995-2024',
+      fixed_rates = input$fixed_rates
     )
 
     our_forecast <- MakeForecast(our_forecast_definition,
@@ -221,6 +231,10 @@ server <- function(input, output, session) {
   output$asfrPlot <- renderPlot({
     pred <- predictions()
     ggplot(pred$asfr_paths) +
+      geom_point(
+        aes(x = h, y = jumpoff_asfr),
+        data = jumpoff_asfr_df
+      ) +
       geom_line(aes(x = as.integer(h), y = asfr, group = sim),
                 alpha = 0.2, linewidth = 0.5) +
       geom_line(aes(x = as.integer(h), y = asfr),

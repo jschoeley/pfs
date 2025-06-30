@@ -14,7 +14,8 @@ DefineForecast(
   asfr_growth_rate,
   timestep_of_steepest_growth,
   randomness = c("finland1995-2024", "empirical", "manual"),
-  covariance = NULL
+  covariance = NULL,
+  fixed_rates = FALSE
 )
 }
 \arguments{
@@ -42,6 +43,9 @@ One of 'finland1995-2024', 'empirical', or 'manual'.}
 
 \item{covariance}{a user provided numeric matrix with covariance
 of log-asfr across age groups.}
+
+\item{fixed_rates}{should a fixed rates forecast be performed
+with central asfr rates fixed at their jumpoff levels? (default=FALSE)}
 }
 \value{
 A PFS object.
@@ -50,6 +54,17 @@ A PFS object.
 Define Fertility Forecast
 }
 \examples{
+DefineForecast(
+    jumpoff_asfrs = c(0.0031, 0.0269, 0.0671, 0.0888, 0.0512, 0.0134, 0.0012),
+    forecast_horizon = 30,
+    ages = c(15, 20, 25, 30, 35, 40, 45),
+    wlast = 5,
+    target_tfr = 1.51,
+    target_mab = 32.9,
+    asfr_growth_rate = 0.3,
+    timestep_of_steepest_growth = 15,
+    randomness = 'finland1995-2024'
+ )
 DefineForecast(
     jumpoff_asfrs = c(0.0031, 0.0269, 0.0671, 0.0888, 0.0512, 0.0134, 0.0012),
     forecast_horizon = 30,

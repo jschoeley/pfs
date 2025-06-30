@@ -25,12 +25,18 @@
 #'  MakeForecast(forecast_definition)
 MakeForecast <- function (forecast_definition, nsim = 250) {
 
-  target_asfrs <- PredictTargetASFRs(forecast_definition)
-
-  central_asfr_trajectory_matrix <- PredictTrajectoryToTargetASFRs(
-    forecast_definition,
-    target_asfrs = target_asfrs$optimized_target_asfrs
-  )
+  if (isTRUE(forecast_definition[['fixed_rates']])) {
+    central_asfr_trajectory_matrix <- PredictTrajectoryToTargetASFRs(
+      forecast_definition,
+      fixed_rates = TRUE
+    )
+  } else {
+    target_asfrs <- PredictTargetASFRs(forecast_definition)
+    central_asfr_trajectory_matrix <- PredictTrajectoryToTargetASFRs(
+      forecast_definition,
+      target_asfrs = target_asfrs$optimized_target_asfrs
+    )
+  }
 
   asfr_sim <- SampleRandomWalkASFRs(
     forecast_definition,

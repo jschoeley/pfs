@@ -4,12 +4,18 @@
 \alias{PredictTrajectoryToTargetASFRs}
 \title{Predict Trajectory to Target ASFRs}
 \usage{
-PredictTrajectoryToTargetASFRs(forecast_definition, target_asfrs)
+PredictTrajectoryToTargetASFRs(
+  forecast_definition,
+  target_asfrs,
+  fixed_rates = FALSE
+)
 }
 \arguments{
 \item{forecast_definition}{a pfs object}
 
 \item{target_asfrs}{a numerical vectors of desired ASFRs at target}
+
+\item{fixed_rates}{should the rates be fixed at jumpoff (default=FALSE)}
 }
 \value{
 a matrix of central ASFR predictions over the forecasting horizon.
